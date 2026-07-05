@@ -1,5 +1,7 @@
 # Linkparser
 
+[![CI](https://github.com/aizakmi08/linkparser/actions/workflows/ci.yml/badge.svg)](https://github.com/aizakmi08/linkparser/actions/workflows/ci.yml)
+
 Linkparser is a Next.js product intelligence tool that searches commerce results and extracts structured product data from URLs. It combines a simple web UI with API routes that call Firecrawl, normalize product names/prices/images, and optionally cache results in Convex.
 
 ## Features
@@ -69,3 +71,9 @@ npm run convex:dev
 ## Notes
 
 The API routes are intentionally defensive around third-party extraction output. They normalize data into a stable UI shape while preserving the raw payload for inspection.
+
+## Quality Signals
+
+- CI runs linting and production build on pushes and pull requests.
+- `CONTRIBUTING.md` documents the expected validation path for extraction, search, and cache changes.
+- `SECURITY.md` captures expectations around API keys, external URL handling, and raw third-party payloads.
