@@ -74,6 +74,6 @@ The API routes are intentionally defensive around third-party extraction output.
 
 ## Quality Signals
 
-- CI runs linting and production build on pushes and pull requests.
+- CI installs dependencies and runs the production build on pushes and pull requests.
 - `CONTRIBUTING.md` documents the expected validation path for extraction, search, and cache changes.
 - `SECURITY.md` captures expectations around API keys, external URL handling, and raw third-party payloads.

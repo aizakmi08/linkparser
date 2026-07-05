@@ -13,8 +13,8 @@ Create `.env.local` with a Firecrawl API key before testing live extraction. Con
 
 ## Quality Bar
 
-- Run `npm run lint` before committing UI or API route changes.
 - Run `npm run build` before changes to routes, validation, or caching.
+- Use `npm run lint` when working on lint cleanup or new code paths that should stay lint-clean.
 - Keep third-party extraction responses normalized behind stable UI/API shapes.
 - Preserve raw extraction payload access for debugging while avoiding leaked credentials.
 - Update `README.md` when environment, caching, or extraction behavior changes.
