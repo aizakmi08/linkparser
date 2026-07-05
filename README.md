@@ -1,64 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Linkparser
 
-## Getting Started
+Linkparser is a Next.js product intelligence tool that searches commerce results and extracts structured product data from URLs. It combines a simple web UI with API routes that call Firecrawl, normalize product names/prices/images, and optionally cache results in Convex.
 
-First, run the development server:
+## Features
+
+- Paste a product URL and extract a normalized product name, display name, price, and primary image.
+- Search for products, filter toward likely commerce pages, and extract product data from top results.
+- Normalize messy retailer titles into short display names.
+- Parse common currency symbols and price formats.
+- Cache repeated requests in memory and optionally in Convex.
+- Keep raw extraction payloads available for debugging.
+
+## Tech Stack
+
+- Next.js App Router
+- TypeScript
+- Firecrawl search and extraction APIs
+- Convex for optional persistent caching
+- Zod request validation
+
+## Project Structure
+
+```text
+src/app/
+|-- page.tsx              # Product URL extraction and search UI
+`-- api/
+    |-- extract/route.ts  # URL extraction, normalization, cache lookup/write-through
+    `-- search/route.ts   # Commerce-oriented search and sequential product extraction
+
+convex/
+|-- schema.ts             # Product cache schema
+`-- products.ts           # Product lookup/upsert functions
+```
+
+## Environment
+
+Create `.env.local`:
+
+```bash
+FIRECRAWL_API_KEY=
+CONVEX_URL=
+```
+
+`FIRECRAWL_API_KEY` is required. `CONVEX_URL` is optional; without it, the app still uses in-memory cache during the server process lifetime.
+
+## Run Locally
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
 ## Convex Setup
 
-1) Install dependencies (already done):
+To enable persistent caching:
 
-```
-npm install convex
-```
-
-2) Initialize Convex (requires GitHub login once):
-
-```
+```bash
 npm run convex:once
 ```
 
-This will guide you through creating a Convex project and generate the `convex/` directory. It only runs once to configure the project. After configuration, keep Convex syncing in another terminal:
+Then keep Convex syncing in another terminal:
 
-```
+```bash
 npm run convex:dev
 ```
 
-3) In a separate terminal, start the Next.js dev server:
+## Notes
 
-```
-npm run dev
-```
-
-Open http://localhost:3000 to view the app. When Convex is running, you can start adding functions in `convex/` and call them from your React components using the Convex client.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The API routes are intentionally defensive around third-party extraction output. They normalize data into a stable UI shape while preserving the raw payload for inspection.
