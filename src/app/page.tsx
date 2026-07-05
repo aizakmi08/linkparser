@@ -146,7 +146,7 @@ export default function Home() {
             </div>
           </div>
 
-          {result.raw && (
+          {result.raw !== undefined && result.raw !== null && (
             <details style={{ marginTop: 16 }}>
               <summary>Debug: raw Firecrawl response</summary>
               <pre style={{ whiteSpace: "pre-wrap", background: "#f6f6f6", padding: 12, borderRadius: 6 }}>
