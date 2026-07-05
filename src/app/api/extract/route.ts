@@ -80,6 +80,27 @@ function parsePrice(input: unknown): ParsedPrice | null {
 	return { amount, currency };
 }
 
+function normalizePriceValue(input: unknown): ExtractResponse["price"] {
+	if (typeof input === "number") return isFinite(input) ? input : null;
+	if (typeof input === "string") return input.trim() ? input : null;
+	if (!input || typeof input !== "object") return null;
+
+	const candidate = input as Record<string, unknown>;
+	const nestedPrice =
+		candidate.price ??
+		candidate.displayPrice ??
+		candidate.formatted ??
+		candidate.amount ??
+		candidate.value;
+
+	if (nestedPrice !== undefined) {
+		return normalizePriceValue(nestedPrice);
+	}
+
+	const parsed = parsePrice(input);
+	return parsed ? parsed.amount : null;
+}
+
 // Normalize Firecrawl response into our ExtractResponse shape
 async function normalizeResponse(value: any): Promise<ExtractResponse> {
 	const candidate = value?.data ?? value;
@@ -103,7 +124,7 @@ async function normalizeResponse(value: any): Promise<ExtractResponse> {
 		productName,
         shortName: extracted?.shortName ?? null,
 		displayName: productName ? makeDisplayName(productName) : extracted?.shortName ?? null,
-		price: rawPrice ?? null,
+		price: normalizePriceValue(rawPrice),
 		imageUrl,
 		raw: value,
 	};
@@ -566,5 +587,4 @@ export async function POST(req: NextRequest) {
 		);
 	}
 }
-
 
